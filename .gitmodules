@@ -22,3 +22,9 @@
 [submodule "lib/printf"]
 	path = lib/printf
 	url = https://github.com/qmk/printf
+[submodule "git@github.com:JDesignEra/mdloader.git"]
+	path = git@github.com:JDesignEra/mdloader.git
+	url = git@github.com:JDesignEra/mdloader.git
+[submodule "mdloader"]
+	path = mdloader
+	url = git@github.com:JDesignEra/mdloader.git
