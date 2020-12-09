@@ -12,14 +12,8 @@ enum jdesign_keycodes {
     U_T_AUTO = SAFE_RANGE,  // USB Extra Port Toggle Auto Detect / Always Active
     MD_BOOT,                // Restart into bootloader after hold timeout
     TO_MAIN,                // Move to _MAIN layer
-    TO_CODE,                // Move to _CODE layer
-    TO_MAV,                 // Move to _MAV Layer
-    GUI_TOG,                // Enable / Disable GUI (Win Lock)
-    PC_WAKE,                // Prevent PC going into sleep mode
     RGB_SUP,                // Suspend RGB Lights
 };
-
-#define WIN_DEL LGUI(KC_DEL)
 
 #define M_MAINF MO(_MAIN_FN)
 #define M_CODEF MO(_CODE_FN)

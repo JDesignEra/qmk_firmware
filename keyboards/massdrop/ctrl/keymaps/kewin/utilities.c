@@ -9,8 +9,4 @@ void reset_indicators_state(void) {
     if (led_state.scroll_lock) {
         tap_code(KC_SLCK);
     }
-
-    if (keymap_config.no_gui) {
-        keymap_config.no_gui = !keymap_config.no_gui;
-    }
 }
