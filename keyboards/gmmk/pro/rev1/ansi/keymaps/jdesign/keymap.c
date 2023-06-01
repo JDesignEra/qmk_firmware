@@ -1,0 +1,86 @@
+#include QMK_KEYBOARD_H
+#include "keymap.h"
+
+#include "rgb.c"
+#include "tap_dances.c"
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    [_MAIN] = LAYOUT(
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,           KC_MPLY,
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_HOME,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_END,
+        TD_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           KC_MNXT,
+        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_MPRV,
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MAIN_FN, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT
+    ),
+    [_MAIN_FN] = LAYOUT(
+        G_RESET, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PSCR,          KC_MUTE,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DEL,           KC_PGUP,
+        _______, _______, KC_UP,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_PGDN,
+        _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          KC_CALC,
+        _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
+        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______
+    )
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static uint16_t key_timer;
+
+    switch (keycode) {
+        case G_RESET: {
+            if (record -> event.pressed) key_timer = timer_read();
+            else if (timer_elapsed(key_timer) >= 500) {
+                reset_keyboard();
+            }
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool encoder_update_user(uint8_t index, bool clockwise) {
+    if (IS_LAYER_ON(_MAIN_FN)) {
+        if (clockwise) tap_code(KC_VOLU);
+        else tap_code(KC_VOLD);
+    }
+    else {
+        if (clockwise) tap_code(KC_WH_D);
+        else tap_code(KC_WH_U);
+    }
+
+    return false;
+}
+
+#ifdef RGB_MATRIX_ENABLE
+void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (IS_LAYER_ON(_MAIN_FN)) {
+        for (uint8_t i = led_min; i < led_max; ++i) {
+            if (i == 0) {
+                rgb_matrix_helper(i, 0, HSV_RED, rgb_matrix_get_speed(), led_min, led_max);
+            }
+            else if (i == 3 && host_keyboard_led_state().caps_lock) {
+                rgb_matrix_helper(i, 1, HSV_WHITE, 127, led_min, led_max);
+            }
+            else if (i == 9 || i == 14 || i == 15 || i == 21 || i == 85 || i == 69 || i == 72 || i == 75) {
+                rgb_matrix_helper(i, 0, HSV_CYAN, rgb_matrix_get_speed(), led_min, led_max);
+            }
+            else if (HAS_ANY_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
+                if (host_keyboard_led_state().caps_lock) rgb_matrix_helper(i, 1, HSV_WHITE, 127, led_min, led_max);
+                else rgb_matrix_helper(i, 0, HSV_CYAN, rgb_matrix_get_speed(), led_min, led_max);
+            }
+            else {
+                rgb_matrix_helper(i, 0, HSV_OFF, rgb_matrix_get_speed(), led_min, led_max);
+            }
+        }
+    }
+    else if (host_keyboard_led_state().caps_lock) {
+        for (uint8_t i = led_min; i < led_max; ++i) {
+            if (i == 3 || HAS_ANY_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
+                rgb_matrix_helper(i, 1, HSV_WHITE, 127, led_min, led_max);
+            }
+        }
+    }
+}
+#endif

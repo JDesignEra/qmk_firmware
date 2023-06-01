@@ -1,0 +1,6 @@
+CONSOLE_ENABLE = no
+# DEBOUNCE_TYPE = sym_eager_pk
+
+MOUSEKEY_ENABLE = yes
+TAP_DANCE_ENABLE = yes
+VIA_ENABLE = no
