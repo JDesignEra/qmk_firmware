@@ -6,6 +6,4 @@ enum layers {
     _MAIN_FN
 };
 
-enum keycodes { G_BOOT };
-
 #define MAIN_FN MO(_MAIN_FN)
