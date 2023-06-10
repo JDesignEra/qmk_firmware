@@ -8,7 +8,6 @@
         "pid": "0x3741",
         "device_version": "0.0.1"
     },
-    "bootloader": "atmel-dfu",
     "layouts": {
         "LAYOUT_qk75_ansi": {
             "layout": [
