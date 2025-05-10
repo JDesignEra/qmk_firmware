@@ -1,0 +1,3 @@
+NKRO_ENABLE = yes
+MAGIC_ENABLE = yes
+TAP_DANCE_ENABLE = yes
